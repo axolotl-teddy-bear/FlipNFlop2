@@ -2,11 +2,12 @@ let x = 100;
 let y = 100;
 let pressStartTime = 0;
 let currentState = "rest"; //keep track of obj state
+let img1, img2, img3;
 
 function preload() {
-  img1 = loadImage('/assets/images/fish1.png');
-  img2 = loadImage('/assets/images/fish2.png');
-  img3 = loadImage('/assets/images/fish3.png');
+  img1 = loadImage('/assets/images/fish1.PNG');
+  img2 = loadImage('/assets/images/fish2.PNG');
+  img3 = loadImage('/assets/images/fish3.PNG');
 }
 
 function setup() { // only runs ONCE
@@ -57,14 +58,16 @@ function draw() { //runs REPEATEDLY
 }
 
 if (currentState === "rest") {
-  Image(img1, x, y)
+  img1.resize(700, 500)
+  image(img1, x, y)
 } else if (currentState === "tense") {
+  img3.resize(700, 500)
   shake = random(-2, 2);
-  ellipse(x, y, 50 + shake, 50 + shake);
+  image(img3, x + shake, y + shake)
 } else if (currentState === "ready") {
-  square(x, y, 50);
+    img2.resize(700, 500)
+  image(img2, x, y)
 }
-
 
 
 }
