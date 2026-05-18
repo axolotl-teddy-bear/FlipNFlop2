@@ -7,7 +7,11 @@ function setup() {
 }
 
 function draw() {
-  if (keyIsDown(65) || keyIsDown(97)) { // 'A' or 'a'
+
+  if (mouseIsPressed) {
+    square(300, 200, 50);
+    else {
+      if (keyIsDown(65) || keyIsDown(97)) { // 'A' or 'a'
     x -= 5;
   }
 
@@ -25,6 +29,4 @@ function draw() {
 
   clear();
   ellipse(x, y, 50, 50);
-  describe(`50-by-50 red ellipse moves left, right, up, and
-    down with WASD presses.`);
-}
+  }
