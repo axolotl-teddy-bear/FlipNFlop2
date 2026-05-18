@@ -10,7 +10,7 @@ function draw() {
 
   if (mouseIsPressed) {
     square(300, 200, 50);
-    else {
+  } else {
       if (keyIsDown(65) || keyIsDown(97)) { // 'A' or 'a'
     x -= 5;
   }
@@ -30,3 +30,4 @@ function draw() {
   clear();
   ellipse(x, y, 50, 50);
   }
+}
