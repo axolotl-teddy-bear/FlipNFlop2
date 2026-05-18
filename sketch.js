@@ -22,8 +22,8 @@ function setup() { // only runs ONCE
 }
 
 function mousePressed() {
-  pressStartTime = millis();
-  currentShape = "rest";
+    pressStartTime = millis();
+    currentShape = "rest";
 }
 
 function draw() { //runs REPEATEDLY
