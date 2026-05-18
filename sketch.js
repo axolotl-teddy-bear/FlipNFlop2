@@ -10,24 +10,25 @@ function draw() {
 
   if (mouseIsPressed) {
     square(300, 200, 50);
-  } else {
+  } else if (mouseIsPressed === false) {
       if (keyIsDown(65) || keyIsDown(97)) { // 'A' or 'a'
-    x -= 5;
+        x -= 5;
+      }
+
+      if (keyIsDown(68) || keyIsDown(100)) { // 'D' or 'd'
+        x += 5;
+      }
+
+      if (keyIsDown(87) || keyIsDown(119)) { // 'W' or 'w'
+        y -= 5;
+      }
+
+      if (keyIsDown(83) || keyIsDown(115)) { // 'S' or 's'
+        y += 5;
+      }
+
+    clear();
+    ellipse(x, y, 50, 50);
   }
 
-  if (keyIsDown(68) || keyIsDown(100)) { // 'D' or 'd'
-    x += 5;
-  }
-
-  if (keyIsDown(87) || keyIsDown(119)) { // 'W' or 'w'
-    y -= 5;
-  }
-
-  if (keyIsDown(83) || keyIsDown(115)) { // 'S' or 's'
-    y += 5;
-  }
-
-  clear();
-  ellipse(x, y, 50, 50);
-  }
 }
