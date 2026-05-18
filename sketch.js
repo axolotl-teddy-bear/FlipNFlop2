@@ -4,6 +4,14 @@ let pressStartTime = 0;
 let currentState = "rest"; //keep track of obj state
 let img1, img2, img3;
 
+let isJumping = false;           // whether jump animation is active
+let jumpStartTime = 0;           // timestamp when jump began
+let jumpDuration = 400;          // total jump animation time (ms)
+let jumpPower = 0;               // how strong the jump is: 0 = no jump, 1 = small, 2 = big
+let jumpDirection = { dx: 0, dy: 0 };   // normalized direction based on keys at release
+let lastMoveX = 0;    // -1 left, 1 right
+let lastMoveY = 0;    // -1 up, 1 down
+
 function preload() {
   img1 = loadImage('/assets/images/fish1.PNG');
   img2 = loadImage('/assets/images/fish2.PNG');
