@@ -157,9 +157,6 @@ function updateJump() {
 
 function updateSlide() {
   if (!isSliding) return;
-
-  slideVel.x *= 0.96
-  slideVel.y *= 0.96;
   
   let elapsed = millis() - slideStartTime;
   
@@ -173,8 +170,11 @@ function updateSlide() {
   let t = 1 - (elapsed / slideDur);
   
   // Move remaining distance with easing
-  x += slideVel.x * t;
-  y += slideVel.y * t;
+  x += slideVel.x;
+  y += slideVel.y;
+
+  slideVel.x *= 0.96
+  slideVel.y *= 0.96;
 }
 
 function draw() {
