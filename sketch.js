@@ -16,7 +16,8 @@ let jumpOffsetY = 0;
 
 let slideVel = { x: 0, y: 0 };
 let isSliding = false;
-let slideDecay = 0.95; //what is slide decay?
+let slideDur = 300;
+let slideStartTime = 0;
 
 function preload() {
   img1 = loadImage('assets/images/fish1.PNG');
@@ -85,6 +86,8 @@ function startJump(state) {
   } else {
     return;
   }
+
+  jumpPower = power;
   
   // Get the direction based on keys pressed at jump time
   jumpDirection = getMovementDir();
@@ -98,7 +101,7 @@ function startJump(state) {
   jumpStartTime = millis(); // resets timer when the fish jumps
 
   isSliding = false;
-  slideVelocity = { x: 0, y: 0};
+  slideVel = { x: 0, y: 0};
 }
 
 function updateJump() {
@@ -123,6 +126,7 @@ function updateJump() {
     jumpVelocity.y = 0;
 
     isSliding = true;
+    slideStartTime = millis();
     slideVel.x = jumpVelocity.x
     slideVel.y = jumpVelocity.y
     return;
@@ -150,28 +154,29 @@ function updateJump() {
 }
 
 function updateSlide() {
-  if (!isSliding) {
+  if (!isSliding) return;
+  
+  let elapsed = millis() - slideStartTime;
+  
+  if (elapsed >= slideDuration) {
+    isSliding = false;
+    slideVel = { x: 0, y: 0 };
     return;
   }
-
-  x += slideVelocity.x;
-  y += slideVelocity.y;
   
-  slideVelocity.x *= slideDecay;
-  slideVelocity.y *= slideDecay;
+  // Progress from 0 to 1
+  let t = 1 - (elapsed / slideDuration);
   
-  // Stop sliding when very slow
-  if (Math.abs(slideVelocity.x) < 0.5 && Math.abs(slideVelocity.y) < 0.5) {
-    isSliding = false;
-    slideVelocity = { x: 0, y: 0 };
-  }
+  // Move remaining distance with easing
+  x += slideVel.x * t;
+  y += slideVel.y * t;
 }
 
 function draw() {
   background(255, 204, 0);
 
   // Update state based on mouse hold (only when not jumping)
-  if (!isJumping) {
+  if (!isJumping && !isSliding) {
     if (mouseIsPressed) {
       let holdDuration = millis() - pressStartTime;
       if (holdDuration < 1000) {
@@ -184,7 +189,7 @@ function draw() {
     }
     
     // Normal movement (only when not jumping)
-    if (!mouseIsPressed) {
+    if (!mouseIsPressed && !isSliding && !isJumping) {
       if (keyIsDown(65) || keyIsDown(97)) {
         x -= 5;
       }
