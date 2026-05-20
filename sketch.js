@@ -174,8 +174,8 @@ function updateSlide() {
   let t = 1 - (elapsed / slideDur);
   
   // Move remaining distance with easing
-  x += slideVel.x;
-  y += slideVel.y;
+  x += slideVel.x * t;
+  y += slideVel.y * t;
 }
 
 function draw() {
