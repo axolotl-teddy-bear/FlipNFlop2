@@ -104,7 +104,6 @@ function startJump(state) {
   jumpStartTime = millis(); // resets timer when the fish jumps
 
   isSliding = false;
-  slideVel = { x: 0, y: 0};
 }
 
 function updateJump() {
