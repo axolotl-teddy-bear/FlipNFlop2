@@ -96,6 +96,9 @@ function startJump(state) {
   let jumpSpeed = (power === 1) ? 15 : 25;
   jumpVelocity.x = jumpDirection.dx * jumpSpeed;
   jumpVelocity.y = jumpDirection.dy * jumpSpeed;
+
+  slideVel.x = jumpVelocity.x;  // ADD THIS
+  slideVel.y = jumpVelocity.y;  // ADD THIS
   
   isJumping = true;
   jumpStartTime = millis(); // resets timer when the fish jumps
@@ -125,12 +128,12 @@ function updateJump() {
 
     isSliding = true;
     slideStartTime = millis();
-    slideVel.x = jumpVelocity.x
-    slideVel.y = jumpVelocity.y
+    slideVel.x = slideVel.x
+    slideVel.y = slideVel.y
 
     jumpVelocity.x = 0;
     jumpVelocity.y = 0;
-    
+
     return;
   }
 
