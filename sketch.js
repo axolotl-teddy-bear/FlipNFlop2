@@ -158,14 +158,14 @@ function updateSlide() {
   
   let elapsed = millis() - slideStartTime;
   
-  if (elapsed >= slideDuration) {
+  if (elapsed >= slideDur) {
     isSliding = false;
     slideVel = { x: 0, y: 0 };
     return;
   }
   
   // Progress from 0 to 1
-  let t = 1 - (elapsed / slideDuration);
+  let t = 1 - (elapsed / slideDur);
   
   // Move remaining distance with easing
   x += slideVel.x * t;
