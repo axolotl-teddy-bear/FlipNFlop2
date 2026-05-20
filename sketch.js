@@ -122,13 +122,15 @@ function updateJump() {
     jumpScale = 1;
     jumpOffsetX = 0;
     jumpOffsetY = 0;
-    jumpVelocity.x = 0;
-    jumpVelocity.y = 0;
 
     isSliding = true;
     slideStartTime = millis();
     slideVel.x = jumpVelocity.x
     slideVel.y = jumpVelocity.y
+
+    jumpVelocity.x = 0;
+    jumpVelocity.y = 0;
+    
     return;
   }
 
