@@ -10,11 +10,13 @@ let jumpDuration = 400;
 let jumpPower = 0;
 let jumpDirection = { dx: 0, dy: 0 };
 let jumpVelocity = { x: 0, y: 0 };
-
-// Define these variables
 let jumpScale = 1;
 let jumpOffsetX = 0;
 let jumpOffsetY = 0;
+
+let slideVel = { x: 0, y: 0 };
+let isSliding = false;
+let slideDecay = 0.95; //what is slide decay?
 
 function preload() {
   img1 = loadImage('assets/images/fish1.PNG');
@@ -83,19 +85,20 @@ function startJump(state) {
   } else {
     return;
   }
-
-  jumpPower = power;
   
   // Get the direction based on keys pressed at jump time
   jumpDirection = getMovementDir();
   
-  // Set jump velocity based on direction and power
-  let jumpSpeed = (jumpPower === 1) ? 15 : 25;
+  // Set jump velocity/speed based on direction and power
+  let jumpSpeed = (power === 1) ? 15 : 25;
   jumpVelocity.x = jumpDirection.dx * jumpSpeed;
   jumpVelocity.y = jumpDirection.dy * jumpSpeed;
   
   isJumping = true;
-  jumpStartTime = millis();
+  jumpStartTime = millis(); // resets timer when the fish jumps
+
+  isSliding = false;
+  slideVelocity = { x: 0, y: 0};
 }
 
 function updateJump() {
@@ -118,6 +121,10 @@ function updateJump() {
     jumpOffsetY = 0;
     jumpVelocity.x = 0;
     jumpVelocity.y = 0;
+
+    isSliding = true;
+    slideVel.x = jumpVelocity.x
+    slideVel.y = jumpVelocity.y
     return;
   }
 
@@ -140,6 +147,24 @@ function updateJump() {
   let offsetDistance = maxOffset * jumpCurve;
   jumpOffsetX = jumpDirection.dx * offsetDistance;
   jumpOffsetY = jumpDirection.dy * offsetDistance;
+}
+
+function updateSlide() {
+  if (!isSliding) {
+    return;
+  }
+
+  x += slideVelocity.x;
+  y += slideVelocity.y;
+  
+  slideVelocity.x *= slideDecay;
+  slideVelocity.y *= slideDecay;
+  
+  // Stop sliding when very slow
+  if (Math.abs(slideVelocity.x) < 0.5 && Math.abs(slideVelocity.y) < 0.5) {
+    isSliding = false;
+    slideVelocity = { x: 0, y: 0 };
+  }
 }
 
 function draw() {
@@ -177,6 +202,7 @@ function draw() {
 
   // Update jump animation
   updateJump();
+  updateSlide();
 
   // Select the correct image
   let currentImg;
