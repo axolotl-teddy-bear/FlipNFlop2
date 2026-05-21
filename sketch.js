@@ -39,7 +39,7 @@ function setup() {
   img1.resize(320, 250);
   img2.resize(320, 250);
   img3.resize(320, 250);
-  img4.resize(1500, 700)
+  img4.resize(500, 300)
 }
 
 function mousePressed() { //when mouse is pressed, the time stats recording. 
