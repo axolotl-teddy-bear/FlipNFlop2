@@ -39,6 +39,7 @@ function setup() {
   img1.resize(320, 250);
   img2.resize(320, 250);
   img3.resize(320, 250);
+  img4.resize(1500, 700)
 }
 
 function mousePressed() { //when mouse is pressed, the time stats recording. 
@@ -214,7 +215,7 @@ function updateSlide() {
 
 function draw() {
   background(255, 204, 0);
-  image(img4, 1500, 700);
+  image(img4, 775, 350);
 
   // Update state based on mouse hold (only when not jumping)
   if (!isJumping && !isSliding) {
