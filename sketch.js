@@ -40,10 +40,9 @@ function setup() {
   img2.resize(320, 250);
   img3.resize(320, 250);
 
-  push();
   imageMode(CORNER);
   img4.resize(1500, 700);
-  pop();
+  imageMode(CENTER); 
 }
 
 function mousePressed() { //when mouse is pressed, the time stats recording. 
