@@ -10,11 +10,14 @@ let jumpDuration = 400;
 let jumpPower = 0;
 let jumpDirection = { dx: 0, dy: 0 };
 let jumpVelocity = { x: 0, y: 0 };
-
-// Define these variables
 let jumpScale = 1;
 let jumpOffsetX = 0;
 let jumpOffsetY = 0;
+
+let slideVel = { x: 0, y: 0 };
+let isSliding = false;
+let slideDur = 300;
+let slideStartTime = 0;
 
 function preload() {
   img1 = loadImage('assets/images/fish1.PNG');
@@ -89,13 +92,18 @@ function startJump(state) {
   // Get the direction based on keys pressed at jump time
   jumpDirection = getMovementDir();
   
-  // Set jump velocity based on direction and power
-  let jumpSpeed = (jumpPower === 1) ? 15 : 25;
+  // Set jump velocity/speed based on direction and power
+  let jumpSpeed = (power === 1) ? 15 : 25;
   jumpVelocity.x = jumpDirection.dx * jumpSpeed;
   jumpVelocity.y = jumpDirection.dy * jumpSpeed;
+
+  slideVel.x = jumpVelocity.x;  // ADD THIS
+  slideVel.y = jumpVelocity.y;  // ADD THIS
   
   isJumping = true;
-  jumpStartTime = millis();
+  jumpStartTime = millis(); // resets timer when the fish jumps
+
+  isSliding = false;
 }
 
 function updateJump() {
@@ -116,8 +124,13 @@ function updateJump() {
     jumpScale = 1;
     jumpOffsetX = 0;
     jumpOffsetY = 0;
+
+    isSliding = true;
+    slideStartTime = millis();
+
     jumpVelocity.x = 0;
     jumpVelocity.y = 0;
+
     return;
   }
 
@@ -142,11 +155,33 @@ function updateJump() {
   jumpOffsetY = jumpDirection.dy * offsetDistance;
 }
 
+function updateSlide() {
+  if (!isSliding) return;
+  
+  let elapsed = millis() - slideStartTime;
+  
+  if (elapsed >= slideDur) {
+    isSliding = false;
+    slideVel = { x: 0, y: 0 };
+    return;
+  }
+  
+  // Progress from 0 to 1
+  let t = 1 - (elapsed / slideDur);
+  
+  // Move remaining distance with easing
+  x += slideVel.x;
+  y += slideVel.y;
+
+  slideVel.x *= 0.96
+  slideVel.y *= 0.96;
+}
+
 function draw() {
   background(255, 204, 0);
 
   // Update state based on mouse hold (only when not jumping)
-  if (!isJumping) {
+  if (!isJumping && !isSliding) {
     if (mouseIsPressed) {
       let holdDuration = millis() - pressStartTime;
       if (holdDuration < 1000) {
@@ -159,7 +194,7 @@ function draw() {
     }
     
     // Normal movement (only when not jumping)
-    if (!mouseIsPressed) {
+    if (!mouseIsPressed && !isSliding && !isJumping) {
       if (keyIsDown(65) || keyIsDown(97)) {
         x -= 5;
       }
@@ -177,6 +212,7 @@ function draw() {
 
   // Update jump animation
   updateJump();
+  updateSlide();
 
   // Select the correct image
   let currentImg;
