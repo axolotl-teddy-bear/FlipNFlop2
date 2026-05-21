@@ -30,6 +30,7 @@ function preload() {
   img1 = loadImage('assets/images/fish1.PNG');
   img2 = loadImage('assets/images/fish2.PNG');
   img3 = loadImage('assets/images/fish3.PNG');
+  img4 = loadImage('assets/images/scene.png');
 }
 
 function setup() {
@@ -213,6 +214,7 @@ function updateSlide() {
 
 function draw() {
   background(255, 204, 0);
+  image(img4, windowWidth, windowHeight);
 
   // Update state based on mouse hold (only when not jumping)
   if (!isJumping && !isSliding) {
