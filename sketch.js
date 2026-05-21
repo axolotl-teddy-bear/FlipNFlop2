@@ -1,23 +1,23 @@
-let x = 100;
-let y = 100;
-let pressStartTime = 0;
-let currentState = "rest";
+let x = 300;
+let y = 300;
+let pressStartTime = 0; //records the time of key press
+let currentState = "rest"; 
 let img1, img2, img3;
 
-let isJumping = false;
-let jumpStartTime = 0;
-let jumpDuration = 400;
+let isJumping = false; 
+let jumpStartTime = 0; //records when jump starts 
+let jumpDuration = 400; //total jump duration
 let jumpPower = 0;
 let jumpDirection = { dx: 0, dy: 0 };
 let jumpVelocity = { x: 0, y: 0 };
-let jumpScale = 1;
+let jumpScale = 1; //scale of fish for 'jumping' zoom effect
 let jumpOffsetX = 0;
 let jumpOffsetY = 0;
 
-let slideVel = { x: 0, y: 0 };
+let slideVel = { x: 0, y: 0 }; //slide speed after land
 let isSliding = false;
-let slideDur = 300;
-let slideStartTime = 0;
+let slideDur = 300; //slide time
+let slideStartTime = 0; //records when slide starts 
 
 function preload() {
   img1 = loadImage('assets/images/fish1.PNG');
@@ -27,22 +27,22 @@ function preload() {
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
-  imageMode(CENTER);
-  img1.resize(700, 500);
-  img2.resize(700, 500);
-  img3.resize(700, 500);
+  imageMode(CENTER); //sets origin at center of image, not corner
+  img1.resize(320, 250);
+  img2.resize(320, 250);
+  img3.resize(320, 250);
 }
 
-function mousePressed() {
+function mousePressed() { //when mouse is pressed, the time stats recording. 
   if (!isJumping) {
     pressStartTime = millis();
     currentState = "rest";
   }
 }
 
-function mouseReleased() {
+function mouseReleased() { // when mouse is released, if not in rest state, start jumping
   if (!isJumping) {
-    let holdDuration = millis() - pressStartTime;
+    let holdDuration = millis() - pressStartTime; //mousereleased time - mousepressedtime = duration of hold
 
     if (currentState === "tense" || currentState === "ready") {
       startJump(currentState);
@@ -50,7 +50,7 @@ function mouseReleased() {
   }
 }
 
-function getMovementDir() {
+function getMovementDir() { 
   let dx = 0;
   let dy = 0;
 
@@ -67,7 +67,7 @@ function getMovementDir() {
     dy += 1;
   }
 
-  if (dx !== 0 || dy !== 0) {
+  if (dx !== 0 || dy !== 0) {  //if multiple buttons are pressed, the fish goes the same direction -> normalise speed 
     let len = Math.hypot(dx, dy);
     dx = dx / len;
     dy = dy / len;
@@ -89,7 +89,6 @@ function startJump(state) {
 
   jumpPower = power;
   
-  // Get the direction based on keys pressed at jump time
   jumpDirection = getMovementDir();
   
   // Set jump velocity/speed based on direction and power
@@ -97,16 +96,16 @@ function startJump(state) {
   jumpVelocity.x = jumpDirection.dx * jumpSpeed;
   jumpVelocity.y = jumpDirection.dy * jumpSpeed;
 
-  slideVel.x = jumpVelocity.x;  // ADD THIS
-  slideVel.y = jumpVelocity.y;  // ADD THIS
+  slideVel.x = jumpVelocity.x;  
+  slideVel.y = jumpVelocity.y;  //record speed for slide 
   
   isJumping = true;
-  jumpStartTime = millis(); // resets timer when the fish jumps
+  jumpStartTime = millis(); // resets timer when the fish starts jumping
 
   isSliding = false;
 }
 
-function updateJump() {
+function updateJump() { 
   if (!isJumping) {
     jumpScale = 1;
     jumpOffsetX = 0;
@@ -116,10 +115,10 @@ function updateJump() {
     return;
   }
 
-  let elapsed = millis() - jumpStartTime;
-  let t = Math.min(1.0, elapsed / jumpDuration);
+  let elapsed = millis() - jumpStartTime; //get how long the jump has lasted
+  let t = Math.min(1.0, elapsed / jumpDuration); 
 
-  if (t >= 1.0) {
+  if (t >= 1.0) { //when t reaches 1 (jump end time), stop jumping and start slide
     isJumping = false;
     jumpScale = 1;
     jumpOffsetX = 0;
@@ -147,12 +146,6 @@ function updateJump() {
   let jumpCurve = Math.sin(Math.PI * t);
   let maxScale = (jumpPower === 1) ? 1.4 : 1.9;
   jumpScale = 1 + (maxScale - 1) * jumpCurve;
-  
-  // Optional: Add a subtle offset for visual effect
-  let maxOffset = (jumpPower === 1) ? 15 : 25;
-  let offsetDistance = maxOffset * jumpCurve;
-  jumpOffsetX = jumpDirection.dx * offsetDistance;
-  jumpOffsetY = jumpDirection.dy * offsetDistance;
 }
 
 function updateSlide() {
@@ -166,7 +159,6 @@ function updateSlide() {
     return;
   }
   
-  // Progress from 0 to 1
   let t = 1 - (elapsed / slideDur);
   
   // Move remaining distance with easing
