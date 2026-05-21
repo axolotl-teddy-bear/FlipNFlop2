@@ -215,7 +215,7 @@ function updateSlide() {
 
 function draw() {
   background(255, 204, 0);
-  image(img4, 0, 0);
+  //image(img4, 0, 0);
 
   // Update state based on mouse hold (only when not jumping)
   if (!isJumping && !isSliding) {
