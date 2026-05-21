@@ -6,7 +6,7 @@ let img1, img2, img3;
 
 let isJumping = false; 
 let jumpStartTime = 0; //records when jump starts 
-let jumpDuration = 400; //total jump duration
+let jumpDuration = 450; //total jump duration
 let jumpPower = 0;
 let jumpDirection = { dx: 0, dy: 0 };
 let jumpVelocity = { x: 0, y: 0 };
@@ -16,8 +16,15 @@ let jumpOffsetY = 0;
 
 let slideVel = { x: 0, y: 0 }; //slide speed after land
 let isSliding = false;
-let slideDur = 300; //slide time
+let slideDur = 400; //slide time
 let slideStartTime = 0; //records when slide starts 
+
+let moveDir = { dx: 0, dy: 0 };
+let moveSpd = 12;
+let moveVel = { x: 0, y: 0 };
+let isMoving = false;
+let moveStartTime = 0;
+let moveDur = 600;
 
 function preload() {
   img1 = loadImage('assets/images/fish1.PNG');
@@ -75,6 +82,41 @@ function getMovementDir() {
   return { dx, dy };
 }
 
+function moveFish() {
+  if (isJumping || isSliding) return;
+
+  moveDir = getMovementDir()
+
+  moveVel.x = moveDir.dx * moveSpd
+  moveVel.y = moveDir.dy * moveSpd
+
+  isMoving = true
+
+  moveStartTime = millis()
+}
+
+function updateMove() {
+  if (!isMoving) return;
+
+
+  let elapsed = millis() - moveStartTime;
+  let t = Math.min(1.0, elapsed / moveDur);
+
+  x += moveVel.x;
+  y += moveVel.y;
+
+  let deceleration = 0.9;
+  moveVel.x *= deceleration;
+  moveVel.y *= deceleration;
+
+  if (t >= 1.0 || (Math.abs(moveVel.x) < 0.5 && Math.abs(moveVel.y) < 0.5)) {
+    isMoving = false;
+    moveVel.x = 0;
+    moveVel.y = 0;
+  }
+
+}
+
 function startJump(state) {
   if (isJumping) return;
 
@@ -100,7 +142,7 @@ function startJump(state) {
   slideVel.y = jumpVelocity.y;  //record speed for slide 
   
   isJumping = true;
-  jumpStartTime = millis(); // resets timer when the fish starts jumping
+  jumpStartTime = millis(); // record timer when the fish starts jumping
 
   isSliding = false;
 }
@@ -184,27 +226,20 @@ function draw() {
     } else {
       currentState = "rest";
     }
+  }
     
-    // Normal movement (only when not jumping)
-    if (!mouseIsPressed && !isSliding && !isJumping) {
-      if (keyIsDown(65) || keyIsDown(97)) {
-        x -= 5;
-      }
-      if (keyIsDown(68) || keyIsDown(100)) {
-        x += 5;
-      }
-      if (keyIsDown(87) || keyIsDown(119)) {
-        y -= 5;
-      }
-      if (keyIsDown(83) || keyIsDown(115)) {
-        y += 5;
+    //normal movement
+    if (!mouseIsPressed && !isSliding && !isJumping && !isMoving) {
+      if (keyIsDown(65) || keyIsDown(97) || keyIsDown(68) || keyIsDown(100) || 
+          keyIsDown(87) || keyIsDown(119) || keyIsDown(83) || keyIsDown(115)) {
+        moveFish();  
       }
     }
-  }
 
   // Update jump animation
   updateJump();
   updateSlide();
+  updateMove();
 
   // Select the correct image
   let currentImg;
