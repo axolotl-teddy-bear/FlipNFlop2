@@ -35,7 +35,6 @@ function preload() {
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
-  img4.resize(1500, 700);
   imageMode(CENTER); //sets origin at center of image, not corner
   img1.resize(320, 250);
   img2.resize(320, 250);
