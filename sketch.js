@@ -1,5 +1,5 @@
-let x = 300;
-let y = 300;
+let x = 900;
+let y = 500;
 let pressStartTime = 0; //records the time of key press
 let currentState = "rest"; 
 let img1, img2, img3;
@@ -16,15 +16,19 @@ let jumpOffsetY = 0;
 
 let slideVel = { x: 0, y: 0 }; //slide speed after land
 let isSliding = false;
-let slideDur = 400; //slide time
+let slideDur = 300; //slide time
 let slideStartTime = 0; //records when slide starts 
 
 let moveDir = { dx: 0, dy: 0 };
-let moveSpd = 12;
+let moveSpd = 2;
 let moveVel = { x: 0, y: 0 };
 let isMoving = false;
 let moveStartTime = 0;
 let moveDur = 600;
+
+let camX = 0;
+let camY = 0;
+let zoom = 3.5;
 
 function preload() {
   img1 = loadImage('assets/images/fish1.PNG');
@@ -39,6 +43,7 @@ function setup() {
   img1.resize(320, 250);
   img2.resize(320, 250);
   img3.resize(320, 250);
+  img4.resize(windowWidth, windowWidth/1.6);
 }
 
 function mousePressed() { //when mouse is pressed, the time stats recording. 
@@ -135,7 +140,7 @@ function startJump(state) {
   jumpDirection = getMovementDir();
   
   // Set jump velocity/speed based on direction and power
-  let jumpSpeed = (power === 1) ? 15 : 25;
+  let jumpSpeed = (power === 1) ? 5 : 7;
   jumpVelocity.x = jumpDirection.dx * jumpSpeed;
   jumpVelocity.y = jumpDirection.dy * jumpSpeed;
 
@@ -208,13 +213,28 @@ function updateSlide() {
   x += slideVel.x;
   y += slideVel.y;
 
-  slideVel.x *= 0.96
-  slideVel.y *= 0.96;
+  slideVel.x *= 0.85
+  slideVel.y *= 0.85;
 }
 
 function draw() {
+  camX = x - width/(2*zoom);
+  camY = y - height/(2*zoom);
+
+  // clamp camera so no black edges
+  camX = constrain(camX, 0, width - width/zoom);
+  camY = constrain(camY, 0, height - height/zoom);
+
+  push();
+  translate(-camX * zoom, -camY * zoom);
+  scale(zoom);
+
   background(255, 204, 0);
 
+  push();
+  imageMode(CORNER);
+  image(img4, 0, 0);
+  pop();
   // Update state based on mouse hold (only when not jumping)
   if (!isJumping && !isSliding) {
     if (mouseIsPressed) {
@@ -257,6 +277,8 @@ function draw() {
   } else {
     currentImg = img2;
   }
+
+  pop();
 
   push();
   // Apply shake and jump offset
