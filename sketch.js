@@ -281,7 +281,6 @@ function draw() {
   pop();
 
   push();
-  // Apply shake and jump offset
   translate(x + jumpOffsetX + shakeX, y + jumpOffsetY + shakeY);
   scale(jumpScale);
   image(currentImg, 0, 0);
